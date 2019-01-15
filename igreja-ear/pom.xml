@@ -17,11 +17,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>igreja-angular</artifactId>
-            <type>pom</type>
-        </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
