@@ -13,22 +13,22 @@
     <artifactId>igreja-angular</artifactId>
 
     <packaging>pom</packaging>
-    <modules>
-        <module>administrativo</module>
-    </modules>
-
-    <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>igreja-administrativo</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-    </dependencies>
 
     <build>
         <finalName>${project.artifactId}</finalName>
     </build>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>igreja-administrativo</artifactId>
+                <version>${project.version}</version>
+                <type>war</type>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
 
     <profiles>
         <profile>
