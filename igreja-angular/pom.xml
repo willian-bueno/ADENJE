@@ -13,19 +13,44 @@
     <artifactId>igreja-angular</artifactId>
 
     <packaging>pom</packaging>
+    <modules>
+        <module>administrativo</module>
+    </modules>
 
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>igreja-administrativo</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
             <type>war</type>
         </dependency>
     </dependencies>
 
-    <modules>
-        <module>administrativo</module>
-    </modules>
+    <build>
+        <finalName>${project.artifactId}</finalName>
+    </build>
 
+    <profiles>
+        <profile>
+            <id>adm</id>
 
+            <properties>
+                <skipTests>true</skipTests>
+            </properties>
+
+            <activation>
+                <property>
+                    <name>adm</name>
+                </property>
+            </activation>
+
+            <modules>
+                <module>administrativo</module>
+            </modules>
+
+            <build>
+                <defaultGoal>clean install</defaultGoal>
+            </build>
+        </profile>
+    </profiles>
 </project>

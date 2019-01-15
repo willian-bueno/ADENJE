@@ -40,6 +40,14 @@
     <dependencyManagement>
 
         <dependencies>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>igreja-angular</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+            </dependency>
+
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>igreja-dto</artifactId>
@@ -49,7 +57,7 @@
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>igreja-interface-servico</artifactId>
+                <artifactId>igreja-interface-service</artifactId>
                 <version>${project.version}</version>
                 <type>jar</type>
             </dependency>
