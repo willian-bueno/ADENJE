@@ -19,7 +19,15 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>igreja-angular</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>pom</type>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>igreja-dto</artifactId>
+            <type>jar</type>
         </dependency>
 
         <dependency>
