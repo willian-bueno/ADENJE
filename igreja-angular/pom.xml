@@ -3,54 +3,162 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <parent>
-        <artifactId>igreja</artifactId>
-        <groupId>br.com.igreja</groupId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>igreja</artifactId>
+    <groupId>br.com.igreja</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>igreja-angular</artifactId>
+  <artifactId>igreja-angular</artifactId>
 
-    <packaging>pom</packaging>
+  <packaging>war</packaging>
 
-    <build>
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>igreja-dto</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>igreja-interface-service</artifactId>
+      <type>jar</type>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+
+  <build>
+    <finalName>${project.artifactId}</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+          <webappDirectory>dist</webappDirectory>
+          <webResources>
+            <resource>
+              <directory>config</directory>
+            </resource>
+          </webResources>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+
+  <profiles>
+
+    <profile>
+      <id>desenvolvimento</id>
+      <activation>
+        <property>
+          <name>esenv</name>
+        </property>
+      </activation>
+      <build>
         <finalName>${project.artifactId}</finalName>
-    </build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>npm-build</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <executable>npm</executable>
+                  <arguments>
+                    <argument>run</argument>
+                    <argument>build</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>igreja-administrativo</artifactId>
-                <version>${project.version}</version>
-                <type>war</type>
-            </dependency>
+    <profile>
+      <id>distribuicao</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-clean-plugin</artifactId>
+            <configuration>
+              <filesets>
+                <fileset>
+                  <directory>dist</directory>
+                </fileset>
+                <fileset>
+                  <directory>src/app/servicos</directory>
+                </fileset>
+              </filesets>
+            </configuration>
+          </plugin>
 
-        </dependencies>
-    </dependencyManagement>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>mark-version</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <executable>echo</executable>
+                  <arguments>
+                    <argument>export const versao = '${project.version}';</argument>
+                  </arguments>
+                  <outputFile>src/versao.ts</outputFile>
+                </configuration>
+              </execution>
+              <execution>
+                <id>npm-install-adenje</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <executable>npm</executable>
+                  <arguments>
+                    <argument>install</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>npm-build-adenje</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <executable>npm</executable>
+                  <arguments>
+                    <argument>run</argument>
+                    <argument>build</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
-    <profiles>
-        <profile>
-            <id>adm</id>
-
-            <properties>
-                <skipTests>true</skipTests>
-            </properties>
-
-            <activation>
-                <property>
-                    <name>adm</name>
-                </property>
-            </activation>
-
-            <modules>
-                <module>administrativo</module>
-            </modules>
-
-            <build>
-                <defaultGoal>clean install</defaultGoal>
-            </build>
-        </profile>
-    </profiles>
 </project>

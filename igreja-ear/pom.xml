@@ -51,21 +51,67 @@
                 <artifactId>maven-ear-plugin</artifactId>
                 <version>${version.ear.plugin}</version>
                 <configuration>
-                    <version>7</version>
+                    <displayName>ADENJE-EAR</displayName>
+                    <generateApplicationXml>true</generateApplicationXml>
                     <defaultLibBundleDir>lib</defaultLibBundleDir>
-                    <fileNameMapping>no-version</fileNameMapping>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.wildfly.plugins</groupId>
-                <artifactId>wildfly-maven-plugin</artifactId>
-                <configuration>
-                    <filename>${project.artifactId}.ear</filename>
-                    <skip>false</skip>
+                    <version>7</version>
+                    <archive>
+                        <manifestEntries>
+                            <Dependencies>org.apache.xalan, org.apache.xerces, org.dom4j</Dependencies>
+                        </manifestEntries>
+                        <manifest>
+                            <addClasspath>false</addClasspath>
+                        </manifest>
+                    </archive>
+                    <modules>
+                        <webModule>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>${project.parent.artifactId}-web</artifactId>
+                            <contextRoot>/web</contextRoot>
+                        </webModule>
+                    </modules>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>distribuicao</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>igreja-angular</artifactId>
+                    <version>${project.version}</version>
+                    <type>war</type>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-ear-plugin</artifactId>
+                        <version>${version.ear.plugin}</version>
+                        <configuration>
+                            <modules>
+                                <webModule>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>${project.parent.artifactId}-web</artifactId>
+                                    <contextRoot>/web</contextRoot>
+                                </webModule>
+                                <webModule>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>${project.parent.artifactId}-angular</artifactId>
+                                    <contextRoot>/igreja</contextRoot>
+                                </webModule>
+                            </modules>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
